@@ -376,6 +376,47 @@ h2::before {
   margin-bottom: 16px;
 }
 
+/* More Settings (collapsed area) */
+.more-settings-toggle {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.btn-text {
+  background: transparent;
+  color: #4b5563;
+  box-shadow: none;
+  padding: 6px 4px;
+  min-width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-text::before {
+  display: none;
+}
+
+.btn-text:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+  color: #111827;
+}
+
+.more-settings {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.more-settings-arrow {
+  font-size: 10px;
+  margin-left: 4px;
+  opacity: 0.7;
+}
+
 /* Setting Item */
 .setting-item {
   background: #f9fafb;

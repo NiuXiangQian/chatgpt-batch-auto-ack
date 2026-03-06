@@ -5,6 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const docsLink = document.getElementById("apiDocsLink");
   const modal = document.getElementById("apiDocsModal");
   const modalClose = document.getElementById("apiDocsModalClose");
+  const moreSettingsToggle = document.getElementById("moreSettingsToggle");
+  const moreSettings = document.getElementById("moreSettings");
+  const moreSettingsArrow = document.getElementById("moreSettingsArrow");
 
   if (input && chrome && chrome.storage && chrome.storage.local) {
     chrome.storage.local.get([RESULT_API_URL_KEY], (data) => {
@@ -77,5 +80,25 @@ document.addEventListener("DOMContentLoaded", () => {
       closeModal();
     }
   });
+
+  // Toggle advanced settings to save vertical space in the panel
+  if (moreSettingsToggle && moreSettings) {
+    let expanded = false;
+    const syncState = () => {
+      moreSettings.style.display = expanded ? "block" : "none";
+      moreSettingsToggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+      if (moreSettingsArrow) {
+        moreSettingsArrow.textContent = expanded ? "▲" : "▼";
+      }
+    };
+
+    syncState();
+
+    moreSettingsToggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      expanded = !expanded;
+      syncState();
+    });
+  }
 });
 

@@ -344,9 +344,20 @@ async function askQuestion(e, t, n = !0, r = !0) {
         r && await enableWebSearch();
         if (!await inputQuestion(e)) throw new Error("Failed to input question");
         if (!await submitQuestion()) throw new Error("Failed to submit question");
+
+        let timeoutMs = 600000; // default 10 minutes
+        try {
+            const settings = await chrome.storage.local.get(["timeoutMinutes"]);
+            const minutes = typeof settings.timeoutMinutes === "number" ? settings.timeoutMinutes : 10;
+            if (minutes && minutes > 0 && minutes <= 60) {
+                timeoutMs = minutes * 60000;
+            }
+        } catch (e) {
+        }
+
         return setTimeout(() => {
             isProcessing && currentQuestion && currentQuestion.questionId === t && (currentAnswer ? handleAnswerComplete() : sendQuestionResult(!1, "Timeout waiting for answer"))
-        }, 12e4), {success: !0, message: "Question submitted, waiting for answer"}
+        }, timeoutMs), {success: !0, message: "Question submitted, waiting for answer"}
     } catch (e) {
         return sendQuestionResult(!1, e.message), {success: !1, error: e.message}
     }

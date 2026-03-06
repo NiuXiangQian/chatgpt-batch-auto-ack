@@ -54,20 +54,73 @@
           <span class="setting-hint" data-i18n="control.useTempChatHint">临时聊天不会保存历史记录</span>
         </div>
 
-        <!-- Result API Endpoint Setting -->
-        <div class="setting-item">
-          <label class="setting-label" for="resultApiUrlInput">
-            <span class="setting-icon">📡</span>
-            <span class="setting-text">结果接收 API 地址</span>
-            <span id="apiDocsLink" class="api-docs-icon" title="点击查看接口文档">📘</span>
-          </label>
-          <input
-            type="text"
-            id="resultApiUrlInput"
-            class="setting-input"
-            placeholder="例如：https://your-api.com/path"
-          />
-          <span class="setting-hint">执行完成后会自动以 JSON POST 方式发送全部结果到该地址</span>
+        <!-- More Settings Toggle -->
+        <div class="more-settings-toggle">
+          <button
+            id="moreSettingsToggle"
+            class="btn btn-text"
+            type="button"
+            aria-expanded="false"
+            aria-controls="moreSettings"
+          >
+            <span class="setting-icon">⚙️</span>
+            <span class="setting-text">更多设置</span>
+            <span id="moreSettingsArrow" class="more-settings-arrow">▼</span>
+          </button>
+        </div>
+
+        <!-- Advanced Settings - collapsed by default -->
+        <div id="moreSettings" class="more-settings" style="display: none;">
+          <!-- Result API Endpoint Setting -->
+          <div class="setting-item">
+            <label class="setting-label" for="resultApiUrlInput">
+              <span class="setting-icon">📡</span>
+              <span class="setting-text">结果接收 API 地址</span>
+              <span id="apiDocsLink" class="api-docs-icon" title="点击查看接口文档">📘</span>
+            </label>
+            <input
+              type="text"
+              id="resultApiUrlInput"
+              class="setting-input"
+              placeholder="例如：https://your-api.com/path"
+            />
+            <span class="setting-hint">执行完成后会自动以 JSON POST 方式发送全部结果到该地址</span>
+          </div>
+
+          <!-- Retry & Timeout Settings -->
+          <div class="setting-item">
+            <label class="setting-label" for="retryCountInput">
+              <span class="setting-icon">🔁</span>
+              <span class="setting-text">失败重试次数</span>
+            </label>
+            <input
+              type="number"
+              id="retryCountInput"
+              class="setting-input"
+              min="0"
+              max="10"
+              step="1"
+              value="3"
+            />
+            <span class="setting-hint">0 表示不重试，默认 3 次</span>
+          </div>
+
+          <div class="setting-item">
+            <label class="setting-label" for="timeoutMinutesInput">
+              <span class="setting-icon">⏳</span>
+              <span class="setting-text">单题超时时间（分钟）</span>
+            </label>
+            <input
+              type="number"
+              id="timeoutMinutesInput"
+              class="setting-input"
+              min="1"
+              max="60"
+              step="1"
+              value="10"
+            />
+            <span class="setting-hint">默认 10 分钟，超时将视为失败</span>
+          </div>
         </div>
       </div>
       
