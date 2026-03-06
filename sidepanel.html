@@ -11,11 +11,24 @@
   <div id="mainPanel" class="container">
     <section class="input-section">
       <h2 data-i18n="input.title">Question Input</h2>
+      <!-- System Command (prepended to each question) -->
+      <div class="system-command-block">
+        <label class="system-command-label">🧩 系统命令（每题前缀）</label>
+        <textarea
+          id="systemCommandInput"
+          class="system-command-textarea"
+          rows="3"
+          placeholder="例如：你是一个严谨的助手，请用要点回答，并给出结论。"
+        ></textarea>
+        <span class="system-command-hint">执行任务时会自动拼接到每个问题前面</span>
+      </div>
+      <label class="questions-label" for="questionsInput">问题列表（每行一题）</label>
       <textarea 
         id="questionsInput" 
         data-i18n-placeholder="input.placeholder"
         placeholder="Enter one question per line, batch input supported..."
         rows="8"
+        wrap="off"
       ></textarea>
       <div class="button-group">
         <button id="addQuestionsBtn" class="btn btn-primary" data-i18n="input.addBtn">Add Questions</button>
@@ -36,16 +49,6 @@
             <span class="setting-text" data-i18n="control.useTempChat">使用临时聊天</span>
           </label>
           <span class="setting-hint" data-i18n="control.useTempChatHint">临时聊天不会保存历史记录</span>
-        </div>
-        
-        <!-- Web Search Setting -->
-        <div class="setting-item">
-          <label class="setting-label">
-            <span class="setting-icon">🌐</span>
-            <input type="checkbox" id="useWebSearchCheckbox" checked>
-            <span class="setting-text" data-i18n="control.useWebSearch">使用联网搜索</span>
-          </label>
-          <span class="setting-hint" data-i18n="control.useWebSearchHint">启用后会自动开启网页搜索功能</span>
         </div>
       </div>
       
