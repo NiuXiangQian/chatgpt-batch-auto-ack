@@ -1,0 +1,461 @@
+{
+  "extName": {
+    "message": "Генератор массовых Q&A для ChatGPT",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Вопросы ChatGPT с JSON-экспортом. Поиск, цитаты, автоматизация для SEO/GEO",
+    "description": "Extension description"
+  },
+  "title": {
+    "message": "Помощник массовых вопросов ChatGPT",
+    "description": "Page title"
+  },
+  "headerTitle": {
+    "message": "Помощник массовых вопросов ChatGPT",
+    "description": "Header title"
+  },
+  "headerOpenChatGPT": {
+    "message": "Открыть ChatGPT",
+    "description": "Open ChatGPT button"
+  },
+  "inputTitle": {
+    "message": "Ввод вопросов",
+    "description": "Input section title"
+  },
+  "inputPlaceholder": {
+    "message": "Введите один вопрос на строку, поддерживается массовый ввод...",
+    "description": "Textarea placeholder"
+  },
+  "inputAddBtn": {
+    "message": "Добавить к задаче",
+    "description": "Add to task button"
+  },
+  "inputClearBtn": {
+    "message": "Очистить ввод",
+    "description": "Clear input button"
+  },
+  "controlTitle": {
+    "message": "Управление выполнением",
+    "description": "Control section title"
+  },
+  "controlStartBtn": {
+    "message": "Начать",
+    "description": "Start button"
+  },
+  "controlPauseBtn": {
+    "message": "Пауза",
+    "description": "Pause button"
+  },
+  "controlResumeBtn": {
+    "message": "Продолжить",
+    "description": "Resume button"
+  },
+  "controlStopBtn": {
+    "message": "Остановить",
+    "description": "Stop button"
+  },
+  "controlRetryBtn": {
+    "message": "Повторить неудачные вопросы",
+    "description": "Retry failed questions button"
+  },
+  "controlUseTempChat": {
+    "message": "Использовать временный чат",
+    "description": "Use temporary chat option"
+  },
+  "controlUseTempChatHint": {
+    "message": "Временный чат не сохраняет историю",
+    "description": "Temporary chat hint text"
+  },
+  "controlUseWebSearch": {
+    "message": "Использовать веб-поиск",
+    "description": "Web search option"
+  },
+  "controlUseWebSearchHint": {
+    "message": "Автоматически активирует веб-поиск",
+    "description": "Web search hint text"
+  },
+  "statsTotal": {
+    "message": "Всего",
+    "description": "Total count label"
+  },
+  "statsCompleted": {
+    "message": "Завершено",
+    "description": "Completed count label"
+  },
+  "statsSuccess": {
+    "message": "Успешно",
+    "description": "Success count label"
+  },
+  "statsFailed": {
+    "message": "Неудачно",
+    "description": "Failed count label"
+  },
+  "progressReady": {
+    "message": "Готово",
+    "description": "Progress status: ready"
+  },
+  "progressRunning": {
+    "message": "Выполняется...",
+    "description": "Progress status: running"
+  },
+  "progressProcessing": {
+    "message": "Обработка {current}/{total}",
+    "description": "Progress status: processing"
+  },
+  "progressPaused": {
+    "message": "Приостановлено",
+    "description": "Progress status: paused"
+  },
+  "progressCompleted": {
+    "message": "Все завершено",
+    "description": "Progress status: completed"
+  },
+  "logTitle": {
+    "message": "Журнал выполнения",
+    "description": "Log section title"
+  },
+  "questionsTitle": {
+    "message": "Список вопросов",
+    "description": "Questions section title"
+  },
+  "questionsExportBtn": {
+    "message": "Экспортировать результаты (JSON)",
+    "description": "Export button"
+  },
+  "questionsClearBtn": {
+    "message": "Очистить все",
+    "description": "Clear all button"
+  },
+  "questionsQuestion": {
+    "message": "Вопрос",
+    "description": "Question label"
+  },
+  "questionsAnswer": {
+    "message": "Ответ",
+    "description": "Answer label"
+  },
+  "questionsSources": {
+    "message": "Источники",
+    "description": "Sources label"
+  },
+  "questionsNoQuestions": {
+    "message": "Пока нет вопросов",
+    "description": "Empty state message"
+  },
+  "questionsAddToStart": {
+    "message": "Добавьте вопросы в поле ввода выше, чтобы начать",
+    "description": "Empty state hint"
+  },
+  "questionsNoAnswer": {
+    "message": "Нет ответа",
+    "description": "No answer placeholder"
+  },
+  "questionsErrorInfo": {
+    "message": "Информация об ошибке",
+    "description": "Error info label"
+  },
+  "questionsUnknownError": {
+    "message": "Неизвестная ошибка",
+    "description": "Unknown error message"
+  },
+  "statusPending": {
+    "message": "Ожидание",
+    "description": "Pending status"
+  },
+  "statusProcessing": {
+    "message": "Обработка",
+    "description": "Processing status"
+  },
+  "statusCompleted": {
+    "message": "Завершено",
+    "description": "Completed status"
+  },
+  "statusFailed": {
+    "message": "Неудачно",
+    "description": "Failed status"
+  },
+  "msgPleaseEnterQuestion": {
+    "message": "Пожалуйста, введите вопрос",
+    "description": "Please enter question warning"
+  },
+  "msgQuestionsAdded": {
+    "message": "вопросов добавлено",
+    "description": "Questions added success message"
+  },
+  "msgNoQuestions": {
+    "message": "Нет вопросов для обработки",
+    "description": "No questions warning"
+  },
+  "msgExecutionPaused": {
+    "message": "Приостановлено",
+    "description": "Execution paused message"
+  },
+  "msgExecutionResumed": {
+    "message": "Возобновлено",
+    "description": "Execution resumed message"
+  },
+  "msgExecutionStopped": {
+    "message": "Остановлено",
+    "description": "Execution stopped message"
+  },
+  "msgNoFailedQuestions": {
+    "message": "Нет неудачных вопросов для повтора",
+    "description": "No failed questions message"
+  },
+  "msgNoResults": {
+    "message": "Нет данных для экспорта",
+    "description": "No results to export warning"
+  },
+  "msgResultsExported": {
+    "message": "Результаты экспортированы",
+    "description": "Results exported success message"
+  },
+  "msgPleaseStopFirst": {
+    "message": "Пожалуйста, сначала остановите обработку",
+    "description": "Please stop first warning"
+  },
+  "msgConfirmClearAll": {
+    "message": "Вы уверены, что хотите очистить все вопросы?",
+    "description": "Confirm clear all dialog"
+  },
+  "msgAllCleared": {
+    "message": "Все вопросы очищены",
+    "description": "All cleared message"
+  },
+  "msgCompleted": {
+    "message": "Завершено",
+    "description": "Completed message"
+  },
+  "msgFailed": {
+    "message": "Неудачно",
+    "description": "Failed message"
+  },
+  "msgWaitingNext": {
+    "message": "Ожидание 3 секунды перед следующим вопросом...",
+    "description": "Waiting next message"
+  },
+  "msgAllCompleted": {
+    "message": "Все вопросы завершены!",
+    "description": "All completed message"
+  },
+  "msgChatGPTOpened": {
+    "message": "ChatGPT открыт в новой вкладке",
+    "description": "ChatGPT opened message"
+  },
+  "msgChatGPTOpenFailed": {
+    "message": "Не удалось открыть ChatGPT",
+    "description": "ChatGPT open failed message"
+  },
+  "msgOpeningChatGPT": {
+    "message": "Открытие ChatGPT...",
+    "description": "Opening ChatGPT message"
+  },
+  "msgCannotOpenChatGPT": {
+    "message": "Невозможно открыть ChatGPT",
+    "description": "Cannot open ChatGPT error"
+  },
+  "msgError": {
+    "message": "Ошибка",
+    "description": "Error label"
+  },
+  "msgStartingBatch": {
+    "message": "Запуск массовой обработки...",
+    "description": "Starting batch message"
+  },
+  "msgFoundPending": {
+    "message": "Найдено $COUNT$ ожидающих вопросов",
+    "description": "Found pending questions message",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "msgWaitingPage": {
+    "message": "Ожидание загрузки страницы ChatGPT (будет автоматически обновлена при необходимости)...",
+    "description": "Waiting for page message"
+  },
+  "msgStartingFirst": {
+    "message": "Начало первого вопроса",
+    "description": "Starting first question message"
+  },
+  "msgResetFailed": {
+    "message": "Сброшено $COUNT$ неудачных вопросов, нажмите \"Начать\" для повтора",
+    "description": "Reset failed questions message",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "msgSubmittedWaiting": {
+    "message": "Вопрос отправлен, ожидание ответа...",
+    "description": "Submitted waiting message"
+  },
+  "msgProcessingFailed": {
+    "message": "Обработка не удалась",
+    "description": "Processing failed message"
+  },
+  "msgLoadedQuestions": {
+    "message": "Загружено $COUNT$ вопросов",
+    "description": "Loaded questions message",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "msgLoadFailed": {
+    "message": "Не удалось загрузить вопросы",
+    "description": "Load failed message"
+  },
+  "msgTempChatEnabled": {
+    "message": "Временный чат активирован",
+    "description": "Temporary chat enabled message"
+  },
+  "msgTempChatDisabled": {
+    "message": "Временный чат деактивирован",
+    "description": "Temporary chat disabled message"
+  },
+  "msgWebSearchEnabled": {
+    "message": "Веб-поиск активирован",
+    "description": "Web search enabled message"
+  },
+  "msgWebSearchDisabled": {
+    "message": "Веб-поиск деактивирован",
+    "description": "Web search disabled message"
+  },
+  "msgReady": {
+    "message": "Помощник массовых вопросов ChatGPT готов",
+    "description": "Ready message"
+  },
+  "loginTitle": {
+    "message": "Вход в аккаунт",
+    "description": "Login title"
+  },
+  "loginSubtitle": {
+    "message": "Пожалуйста, войдите, чтобы продолжить",
+    "description": "Login subtitle"
+  },
+  "loginEmail": {
+    "message": "Email",
+    "description": "Email label"
+  },
+  "loginPassword": {
+    "message": "Пароль",
+    "description": "Password label"
+  },
+  "loginLoginBtn": {
+    "message": "Войти",
+    "description": "Login button"
+  },
+  "loginRegisterBtn": {
+    "message": "Зарегистрироваться",
+    "description": "Register button"
+  },
+  "loginBrowseWithoutLogin": {
+    "message": "Просмотр без входа",
+    "description": "Browse without login button"
+  },
+  "loginNoAccount": {
+    "message": "Нет аккаунта?",
+    "description": "No account prompt"
+  },
+  "loginGoToRegister": {
+    "message": "Зарегистрироваться",
+    "description": "Go to register button"
+  },
+  "loginLoggingIn": {
+    "message": "Вход...",
+    "description": "Logging in status"
+  },
+  "loginRegistering": {
+    "message": "Регистрация...",
+    "description": "Registering status"
+  },
+  "loginSuccess": {
+    "message": "Вход выполнен успешно",
+    "description": "Login success message"
+  },
+  "loginRegisterSuccess": {
+    "message": "Регистрация успешна, пожалуйста, войдите",
+    "description": "Register success message"
+  },
+  "loginFailed": {
+    "message": "Ошибка входа",
+    "description": "Login failed message"
+  },
+  "loginRegisterFailed": {
+    "message": "Ошибка регистрации",
+    "description": "Register failed message"
+  },
+  "loginInvalidEmail": {
+    "message": "Неверный email",
+    "description": "Invalid email message"
+  },
+  "loginPasswordTooShort": {
+    "message": "Пароль должен содержать минимум 6 символов",
+    "description": "Password too short message"
+  },
+  "loginPleaseLoginFirst": {
+    "message": "Пожалуйста, войдите, чтобы использовать эту функцию",
+    "description": "Login required message"
+  },
+  "headerLogin": {
+    "message": "Войти",
+    "description": "Login button"
+  },
+  "headerLogout": {
+    "message": "Выйти",
+    "description": "Logout button"
+  },
+  "headerLoggedInAs": {
+    "message": "Вошли как",
+    "description": "Logged in user label"
+  },
+  "headerGreeting": {
+    "message": "Здравствуйте",
+    "description": "User greeting"
+  },
+  "headerGuestMode": {
+    "message": "Вы находитесь в гостевом режиме. Войдите, чтобы использовать все функции.",
+    "description": "Guest mode message"
+  },
+  "headerRegister": {
+    "message": "Зарегистрироваться",
+    "description": "Register button"
+  },
+  "registerTitle": {
+    "message": "Создать аккаунт",
+    "description": "Register title"
+  },
+  "registerSubtitle": {
+    "message": "Зарегистрируйтесь, чтобы начать",
+    "description": "Register subtitle"
+  },
+  "registerPasswordConfirm": {
+    "message": "Подтвердите пароль",
+    "description": "Confirm password label"
+  },
+  "registerBackToLogin": {
+    "message": "Вернуться к входу",
+    "description": "Back to login button"
+  },
+  "registerHasAccount": {
+    "message": "Уже есть аккаунт?",
+    "description": "Has account prompt"
+  },
+  "registerGoToLogin": {
+    "message": "Войти",
+    "description": "Go to login button"
+  },
+  "registerPasswordMismatch": {
+    "message": "Пароли не совпадают",
+    "description": "Password mismatch message"
+  }
+}
+

@@ -1,0 +1,461 @@
+{
+  "extName": {
+    "message": "ChatGPT Massen-Q&A-Generator",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Massenfragen an ChatGPT mit JSON-Export. Websuche, Zitate, automatisierte Aufgaben für SEO/GEO-Inhaltserstellung",
+    "description": "Extension description"
+  },
+  "title": {
+    "message": "ChatGPT Massenfragen-Assistent",
+    "description": "Page title"
+  },
+  "headerTitle": {
+    "message": "ChatGPT Massenfragen-Assistent",
+    "description": "Header title"
+  },
+  "headerOpenChatGPT": {
+    "message": "ChatGPT öffnen",
+    "description": "Open ChatGPT button"
+  },
+  "inputTitle": {
+    "message": "Frageneingabe",
+    "description": "Input section title"
+  },
+  "inputPlaceholder": {
+    "message": "Geben Sie eine Frage pro Zeile ein, Masseneingabe unterstützt...",
+    "description": "Textarea placeholder"
+  },
+  "inputAddBtn": {
+    "message": "Zur Aufgabe hinzufügen",
+    "description": "Add to task button"
+  },
+  "inputClearBtn": {
+    "message": "Eingabe löschen",
+    "description": "Clear input button"
+  },
+  "controlTitle": {
+    "message": "Ausführungssteuerung",
+    "description": "Control section title"
+  },
+  "controlStartBtn": {
+    "message": "Starten",
+    "description": "Start button"
+  },
+  "controlPauseBtn": {
+    "message": "Pause",
+    "description": "Pause button"
+  },
+  "controlResumeBtn": {
+    "message": "Fortsetzen",
+    "description": "Resume button"
+  },
+  "controlStopBtn": {
+    "message": "Stoppen",
+    "description": "Stop button"
+  },
+  "controlRetryBtn": {
+    "message": "Fehlgeschlagene Fragen wiederholen",
+    "description": "Retry failed questions button"
+  },
+  "controlUseTempChat": {
+    "message": "Temporären Chat verwenden",
+    "description": "Use temporary chat option"
+  },
+  "controlUseTempChatHint": {
+    "message": "Temporärer Chat speichert keinen Verlauf",
+    "description": "Temporary chat hint text"
+  },
+  "controlUseWebSearch": {
+    "message": "Websuche verwenden",
+    "description": "Web search option"
+  },
+  "controlUseWebSearchHint": {
+    "message": "Aktiviert automatisch Websuche",
+    "description": "Web search hint text"
+  },
+  "statsTotal": {
+    "message": "Gesamt",
+    "description": "Total count label"
+  },
+  "statsCompleted": {
+    "message": "Abgeschlossen",
+    "description": "Completed count label"
+  },
+  "statsSuccess": {
+    "message": "Erfolgreich",
+    "description": "Success count label"
+  },
+  "statsFailed": {
+    "message": "Fehlgeschlagen",
+    "description": "Failed count label"
+  },
+  "progressReady": {
+    "message": "Bereit",
+    "description": "Progress status: ready"
+  },
+  "progressRunning": {
+    "message": "Läuft...",
+    "description": "Progress status: running"
+  },
+  "progressProcessing": {
+    "message": "Verarbeite {current}/{total}",
+    "description": "Progress status: processing"
+  },
+  "progressPaused": {
+    "message": "Pausiert",
+    "description": "Progress status: paused"
+  },
+  "progressCompleted": {
+    "message": "Alles abgeschlossen",
+    "description": "Progress status: completed"
+  },
+  "logTitle": {
+    "message": "Ausführungsprotokoll",
+    "description": "Log section title"
+  },
+  "questionsTitle": {
+    "message": "Fragenliste",
+    "description": "Questions section title"
+  },
+  "questionsExportBtn": {
+    "message": "Ergebnisse exportieren (JSON)",
+    "description": "Export button"
+  },
+  "questionsClearBtn": {
+    "message": "Alle löschen",
+    "description": "Clear all button"
+  },
+  "questionsQuestion": {
+    "message": "Frage",
+    "description": "Question label"
+  },
+  "questionsAnswer": {
+    "message": "Antwort",
+    "description": "Answer label"
+  },
+  "questionsSources": {
+    "message": "Quellen",
+    "description": "Sources label"
+  },
+  "questionsNoQuestions": {
+    "message": "Noch keine Fragen",
+    "description": "Empty state message"
+  },
+  "questionsAddToStart": {
+    "message": "Fügen Sie Fragen im Eingabefeld oben hinzu, um zu beginnen",
+    "description": "Empty state hint"
+  },
+  "questionsNoAnswer": {
+    "message": "Keine Antwort",
+    "description": "No answer placeholder"
+  },
+  "questionsErrorInfo": {
+    "message": "Fehlerinformation",
+    "description": "Error info label"
+  },
+  "questionsUnknownError": {
+    "message": "Unbekannter Fehler",
+    "description": "Unknown error message"
+  },
+  "statusPending": {
+    "message": "Ausstehend",
+    "description": "Pending status"
+  },
+  "statusProcessing": {
+    "message": "Wird verarbeitet",
+    "description": "Processing status"
+  },
+  "statusCompleted": {
+    "message": "Abgeschlossen",
+    "description": "Completed status"
+  },
+  "statusFailed": {
+    "message": "Fehlgeschlagen",
+    "description": "Failed status"
+  },
+  "msgPleaseEnterQuestion": {
+    "message": "Bitte geben Sie eine Frage ein",
+    "description": "Please enter question warning"
+  },
+  "msgQuestionsAdded": {
+    "message": "Fragen hinzugefügt",
+    "description": "Questions added success message"
+  },
+  "msgNoQuestions": {
+    "message": "Keine Fragen zu verarbeiten",
+    "description": "No questions warning"
+  },
+  "msgExecutionPaused": {
+    "message": "Pausiert",
+    "description": "Execution paused message"
+  },
+  "msgExecutionResumed": {
+    "message": "Fortgesetzt",
+    "description": "Execution resumed message"
+  },
+  "msgExecutionStopped": {
+    "message": "Gestoppt",
+    "description": "Execution stopped message"
+  },
+  "msgNoFailedQuestions": {
+    "message": "Keine fehlgeschlagenen Fragen zum Wiederholen",
+    "description": "No failed questions message"
+  },
+  "msgNoResults": {
+    "message": "Keine Daten zum Exportieren",
+    "description": "No results to export warning"
+  },
+  "msgResultsExported": {
+    "message": "Ergebnisse exportiert",
+    "description": "Results exported success message"
+  },
+  "msgPleaseStopFirst": {
+    "message": "Bitte stoppen Sie zuerst die Verarbeitung",
+    "description": "Please stop first warning"
+  },
+  "msgConfirmClearAll": {
+    "message": "Möchten Sie wirklich alle Fragen löschen?",
+    "description": "Confirm clear all dialog"
+  },
+  "msgAllCleared": {
+    "message": "Alle Fragen gelöscht",
+    "description": "All cleared message"
+  },
+  "msgCompleted": {
+    "message": "Abgeschlossen",
+    "description": "Completed message"
+  },
+  "msgFailed": {
+    "message": "Fehlgeschlagen",
+    "description": "Failed message"
+  },
+  "msgWaitingNext": {
+    "message": "Warte 3 Sekunden vor der nächsten Frage...",
+    "description": "Waiting next message"
+  },
+  "msgAllCompleted": {
+    "message": "Alle Fragen abgeschlossen!",
+    "description": "All completed message"
+  },
+  "msgChatGPTOpened": {
+    "message": "ChatGPT in neuem Tab geöffnet",
+    "description": "ChatGPT opened message"
+  },
+  "msgChatGPTOpenFailed": {
+    "message": "ChatGPT konnte nicht geöffnet werden",
+    "description": "ChatGPT open failed message"
+  },
+  "msgOpeningChatGPT": {
+    "message": "ChatGPT wird geöffnet...",
+    "description": "Opening ChatGPT message"
+  },
+  "msgCannotOpenChatGPT": {
+    "message": "ChatGPT kann nicht geöffnet werden",
+    "description": "Cannot open ChatGPT error"
+  },
+  "msgError": {
+    "message": "Fehler",
+    "description": "Error label"
+  },
+  "msgStartingBatch": {
+    "message": "Stapelverarbeitung wird gestartet...",
+    "description": "Starting batch message"
+  },
+  "msgFoundPending": {
+    "message": "$COUNT$ ausstehende Fragen gefunden",
+    "description": "Found pending questions message",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "msgWaitingPage": {
+    "message": "Warte auf ChatGPT-Seite (wird bei Bedarf automatisch aktualisiert)...",
+    "description": "Waiting for page message"
+  },
+  "msgStartingFirst": {
+    "message": "Erste Frage wird gestartet",
+    "description": "Starting first question message"
+  },
+  "msgResetFailed": {
+    "message": "$COUNT$ fehlgeschlagene Fragen zurückgesetzt, klicken Sie auf \"Starten\" zum Wiederholen",
+    "description": "Reset failed questions message",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "msgSubmittedWaiting": {
+    "message": "Frage übermittelt, warte auf Antwort...",
+    "description": "Submitted waiting message"
+  },
+  "msgProcessingFailed": {
+    "message": "Verarbeitung fehlgeschlagen",
+    "description": "Processing failed message"
+  },
+  "msgLoadedQuestions": {
+    "message": "$COUNT$ Fragen geladen",
+    "description": "Loaded questions message",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "10"
+      }
+    }
+  },
+  "msgLoadFailed": {
+    "message": "Fragen konnten nicht geladen werden",
+    "description": "Load failed message"
+  },
+  "msgTempChatEnabled": {
+    "message": "Temporärer Chat aktiviert",
+    "description": "Temporary chat enabled message"
+  },
+  "msgTempChatDisabled": {
+    "message": "Temporärer Chat deaktiviert",
+    "description": "Temporary chat disabled message"
+  },
+  "msgWebSearchEnabled": {
+    "message": "Websuche aktiviert",
+    "description": "Web search enabled message"
+  },
+  "msgWebSearchDisabled": {
+    "message": "Websuche deaktiviert",
+    "description": "Web search disabled message"
+  },
+  "msgReady": {
+    "message": "ChatGPT Massenfragen-Assistent bereit",
+    "description": "Ready message"
+  },
+  "loginTitle": {
+    "message": "Kontoanmeldung",
+    "description": "Login title"
+  },
+  "loginSubtitle": {
+    "message": "Bitte melden Sie sich an, um fortzufahren",
+    "description": "Login subtitle"
+  },
+  "loginEmail": {
+    "message": "E-Mail",
+    "description": "Email label"
+  },
+  "loginPassword": {
+    "message": "Passwort",
+    "description": "Password label"
+  },
+  "loginLoginBtn": {
+    "message": "Anmelden",
+    "description": "Login button"
+  },
+  "loginRegisterBtn": {
+    "message": "Registrieren",
+    "description": "Register button"
+  },
+  "loginBrowseWithoutLogin": {
+    "message": "Ohne Anmeldung durchsuchen",
+    "description": "Browse without login button"
+  },
+  "loginNoAccount": {
+    "message": "Noch kein Konto?",
+    "description": "No account prompt"
+  },
+  "loginGoToRegister": {
+    "message": "Registrieren",
+    "description": "Go to register button"
+  },
+  "loginLoggingIn": {
+    "message": "Anmeldung läuft...",
+    "description": "Logging in status"
+  },
+  "loginRegistering": {
+    "message": "Registrierung läuft...",
+    "description": "Registering status"
+  },
+  "loginSuccess": {
+    "message": "Anmeldung erfolgreich",
+    "description": "Login success message"
+  },
+  "loginRegisterSuccess": {
+    "message": "Registrierung erfolgreich, bitte melden Sie sich an",
+    "description": "Register success message"
+  },
+  "loginFailed": {
+    "message": "Anmeldung fehlgeschlagen",
+    "description": "Login failed message"
+  },
+  "loginRegisterFailed": {
+    "message": "Registrierung fehlgeschlagen",
+    "description": "Register failed message"
+  },
+  "loginInvalidEmail": {
+    "message": "Ungültige E-Mail",
+    "description": "Invalid email message"
+  },
+  "loginPasswordTooShort": {
+    "message": "Passwort muss mindestens 6 Zeichen lang sein",
+    "description": "Password too short message"
+  },
+  "loginPleaseLoginFirst": {
+    "message": "Bitte melden Sie sich an, um diese Funktion zu nutzen",
+    "description": "Login required message"
+  },
+  "headerLogin": {
+    "message": "Anmelden",
+    "description": "Login button"
+  },
+  "headerLogout": {
+    "message": "Abmelden",
+    "description": "Logout button"
+  },
+  "headerLoggedInAs": {
+    "message": "Angemeldet als",
+    "description": "Logged in user label"
+  },
+  "headerGreeting": {
+    "message": "Hallo",
+    "description": "User greeting"
+  },
+  "headerGuestMode": {
+    "message": "Sie sind im Gastmodus. Melden Sie sich an, um alle Funktionen zu nutzen.",
+    "description": "Guest mode message"
+  },
+  "headerRegister": {
+    "message": "Registrieren",
+    "description": "Register button"
+  },
+  "registerTitle": {
+    "message": "Konto erstellen",
+    "description": "Register title"
+  },
+  "registerSubtitle": {
+    "message": "Registrieren Sie sich, um loszulegen",
+    "description": "Register subtitle"
+  },
+  "registerPasswordConfirm": {
+    "message": "Passwort bestätigen",
+    "description": "Confirm password label"
+  },
+  "registerBackToLogin": {
+    "message": "Zurück zur Anmeldung",
+    "description": "Back to login button"
+  },
+  "registerHasAccount": {
+    "message": "Bereits ein Konto?",
+    "description": "Has account prompt"
+  },
+  "registerGoToLogin": {
+    "message": "Anmelden",
+    "description": "Go to login button"
+  },
+  "registerPasswordMismatch": {
+    "message": "Passwörter stimmen nicht überein",
+    "description": "Password mismatch message"
+  }
+}
+
