@@ -64,9 +64,56 @@ function sendQuestionResult(e, t = null) {
         sources: currentSources,
         error: t
     };
+    // Send to extension sidepanel
     chrome.runtime.sendMessage({type: "QUESTION_COMPLETE", result: n}, e => {
         chrome.runtime.lastError
-    }), isProcessing = !1, currentQuestion = null, currentAnswer = "", currentSources = [], currentReferences = [], sseChunks = []
+    });
+    // Also send to external API if configured
+    sendResultToExternalApi(n);
+    isProcessing = !1;
+    currentQuestion = null;
+    currentAnswer = "";
+    currentSources = [];
+    currentReferences = [];
+    sseChunks = [];
+}
+
+function sendResultToExternalApi(result) {
+    try {
+        if (!chrome || !chrome.storage || !chrome.storage.local) return;
+        chrome.storage.local.get(["resultApiUrl"], (data) => {
+            if (chrome.runtime && chrome.runtime.lastError) {
+                return;
+            }
+            let url = "";
+            if (data && typeof data.resultApiUrl === "string") {
+                url = data.resultApiUrl.trim();
+            }
+            if (!url) return;
+            const lower = url.toLowerCase();
+            if (!lower.startsWith("http://") && !lower.startsWith("https://")) {
+                return;
+            }
+            const payload = {
+                question: result.question,
+                status: result.success ? "completed" : "failed",
+                answer: result.answer || "",
+                timestamp: Date.now(),
+                error: result.error
+            };
+            try {
+                fetch(url, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(payload)
+                }).catch(() => {});
+            } catch {
+                // ignore fetch errors
+            }
+        });
+    } catch {
+        // ignore storage errors
+    }
 }
 
 function waitForElement(e, t = 1e4) {
