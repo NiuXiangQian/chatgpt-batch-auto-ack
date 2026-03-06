@@ -394,4 +394,29 @@ window.addEventListener("message", e => {
             error: e.message
         })), !0
     }
+    if ("GET_PROJECTS" === e.type) {
+        try {
+            const projects = getChatGPTProjects();
+            n({success: !0, projects});
+        } catch (r) {
+            n({success: !1, error: r.message || String(r)});
+        }
+        return !0;
+    }
 }), initializeContentScript();
+
+function getChatGPTProjects() {
+    const results = [];
+    const links = document.querySelectorAll('a.__menu-item[data-sidebar-item="true"][href*="/project"]');
+    links.forEach(a => {
+        let href = a.getAttribute("href") || "";
+        if (!href) return;
+        if (href.startsWith("/")) {
+            href = location.origin + href;
+        }
+        const nameEl = a.querySelector(".truncate") || a;
+        const name = (nameEl.textContent || "").trim() || href;
+        results.push({name, url: href});
+    });
+    return results;
+}

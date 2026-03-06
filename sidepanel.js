@@ -120,6 +120,7 @@ const questionsInput = document.getElementById("questionsInput"),
     stopBtn = document.getElementById("stopBtn"), stopBtn2 = document.getElementById("stopBtn2"),
     retryFailedBtn = document.getElementById("retryFailedBtn"), exportBtn = document.getElementById("exportBtn"),
     useTempChatCheckbox = document.getElementById("useTempChatCheckbox"),
+    projectSelect = document.getElementById("projectSelect"),
     systemCommandInput = document.getElementById("systemCommandInput"),
     clearAllBtn = document.getElementById("clearAllBtn"), progressText = document.getElementById("progressText"),
     progressPercent = document.getElementById("progressPercent"), idleButtons = document.getElementById("idleButtons"),
@@ -133,8 +134,25 @@ const questionsInput = document.getElementById("questionsInput"),
     retryCountInput = document.getElementById("retryCountInput"),
     timeoutMinutesInput = document.getElementById("timeoutMinutesInput");
 
+let projects = [];
+const SELECTED_PROJECT_URL_KEY = "selectedProjectUrl";
+
 function setupEventListeners() {
-    addQuestionsBtn.addEventListener("click", handleAddQuestions), clearInputBtn.addEventListener("click", handleClearInput), startBtn.addEventListener("click", handleStart), pauseBtn.addEventListener("click", handlePause), resumeBtn.addEventListener("click", handleResume), stopBtn.addEventListener("click", handleStop), stopBtn2.addEventListener("click", handleStop), retryFailedBtn.addEventListener("click", handleRetryFailed), useTempChatCheckbox.addEventListener("change", handleTempChatChange), systemCommandInput && systemCommandInput.addEventListener("input", handleSystemCommandChange), exportBtn.addEventListener("click", handleExport), clearAllBtn.addEventListener("click", handleClearAll), retryCountInput && retryCountInput.addEventListener("change", handleRetryCountChange), timeoutMinutesInput && timeoutMinutesInput.addEventListener("change", handleTimeoutMinutesChange)
+    addQuestionsBtn.addEventListener("click", handleAddQuestions),
+        clearInputBtn.addEventListener("click", handleClearInput),
+        startBtn.addEventListener("click", handleStart),
+        pauseBtn.addEventListener("click", handlePause),
+        resumeBtn.addEventListener("click", handleResume),
+        stopBtn.addEventListener("click", handleStop),
+        stopBtn2.addEventListener("click", handleStop),
+        retryFailedBtn.addEventListener("click", handleRetryFailed),
+        useTempChatCheckbox.addEventListener("change", handleTempChatChange),
+        projectSelect && projectSelect.addEventListener("change", handleProjectChange),
+        systemCommandInput && systemCommandInput.addEventListener("input", handleSystemCommandChange),
+        exportBtn.addEventListener("click", handleExport),
+        clearAllBtn.addEventListener("click", handleClearAll),
+        retryCountInput && retryCountInput.addEventListener("change", handleRetryCountChange),
+        timeoutMinutesInput && timeoutMinutesInput.addEventListener("change", handleTimeoutMinutesChange)
 }
 
 function t(e, t) {
@@ -195,10 +213,22 @@ async function handleStart() {
     questions.forEach(e => {
         "failed" === e.status && (e.status = "pending", e.error = null, e.retryCount = 0)
     }), saveQuestions(), updateUI(), saveRuntimeSettings();
-    const s = useTempChatCheckbox.checked;
+
+    const useTemp = useTempChatCheckbox.checked;
+    let projectUrl = null;
+    if (!useTemp && projectSelect) {
+        projectUrl = projectSelect.value || null;
+        if (!projectUrl) return void addLog("请先选择一个项目，或者勾选“使用临时聊天”。", "warning");
+    }
+
     addLog(t("messages.openingChatGPT"), "info");
     try {
-        const e = await chrome.runtime.sendMessage({type: "OPEN_CHATGPT", useTempChat: s, useWebSearch: !1});
+        const e = await chrome.runtime.sendMessage({
+            type: "OPEN_CHATGPT",
+            useTempChat: useTemp,
+            projectUrl: projectUrl,
+            useWebSearch: !1
+        });
         if (!e.success) return void addLog(t("messages.cannotOpenChatGPT") + ": " + e.error, "error")
     } catch (e) {
         return void addLog(t("messages.error") + ": " + e.message, "error")
@@ -249,12 +279,19 @@ async function processNextQuestion() {
     const s = e.question.substring(0, 50);
     addLog(`[${currentIndex + 1}/${questions.length}]: ${s}...`, "info");
     try {
-        const s = useTempChatCheckbox.checked, r = systemCommandInput ? systemCommandInput.value.trim() : "",
+        const useTemp = useTempChatCheckbox.checked;
+        let projectUrl = null;
+        if (!useTemp && projectSelect) {
+            projectUrl = projectSelect.value || null;
+            if (!projectUrl) throw new Error("请先选择一个项目，或者勾选“使用临时聊天”。");
+        }
+        const r = systemCommandInput ? systemCommandInput.value.trim() : "",
             o = await chrome.runtime.sendMessage({
                 type: "PROCESS_QUESTION",
                 question: r ? r + "\n\n" + e.question : e.question,
                 questionId: e.id,
-                useTempChat: s,
+                useTempChat: useTemp,
+                projectUrl: projectUrl,
                 useWebSearch: !1
             });
         if (!o || !o.success) throw new Error(o?.error || "No response from background script");
@@ -423,7 +460,19 @@ function saveTempChatSetting(e) {
 
 function handleTempChatChange(e) {
     const s = e.target.checked;
-    saveTempChatSetting(s), addLog(t(s ? "msgTempChatEnabled" : "msgTempChatDisabled"), "info")
+    saveTempChatSetting(s),
+        s && projectSelect && (projectSelect.value = ""),
+        addLog(t(s ? "msgTempChatEnabled" : "msgTempChatDisabled"), "info")
+}
+
+function handleProjectChange(e) {
+    const value = e.target.value || "";
+    chrome.storage.local.set({[SELECTED_PROJECT_URL_KEY]: value});
+    if (value && useTempChatCheckbox.checked) {
+        useTempChatCheckbox.checked = !1;
+        saveTempChatSetting(!1);
+        addLog("已选择项目，将不再使用临时聊天。", "info");
+    }
 }
 
 async function loadQuestions() {
@@ -592,7 +641,55 @@ function showQuestionDetailModal(e) {
 }
 
 async function initializeApp() {
-    await loadTempChatSetting(), await loadSystemCommandSetting(), initQuestionDetailModal(), addLog(t("messages.ready"), "success")
+    await loadTempChatSetting(),
+        await loadSystemCommandSetting(),
+        initQuestionDetailModal(),
+        await loadProjects(),
+        addLog(t("messages.ready"), "success")
+}
+
+async function loadProjects() {
+    if (!projectSelect) return;
+    try {
+        const tokenData = await chrome.storage.local.get([SELECTED_PROJECT_URL_KEY]);
+        const savedProjectUrl = tokenData[SELECTED_PROJECT_URL_KEY] || "";
+        projectSelect.innerHTML = '<option value="">从 ChatGPT 加载项目列表中...</option>';
+
+        const resp = await chrome.runtime.sendMessage({type: "GET_PROJECTS"});
+        if (!resp || !resp.success) {
+            throw new Error(resp && resp.error ? resp.error : "No response");
+        }
+        const list = Array.isArray(resp.projects) ? resp.projects : [];
+        projects = list.map(p => ({
+            id: p.id || p.url || p.name,
+            name: p.name || p.title || p.label || p.url,
+            url: p.url
+        })).filter(p => p.url);
+        projectSelect.innerHTML = "";
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "不使用项目（走临时聊天或默认对话）";
+        projectSelect.appendChild(placeholder);
+        projects.forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p.url;
+            opt.textContent = p.name;
+            projectSelect.appendChild(opt);
+        });
+        if (savedProjectUrl) {
+            const match = projects.find(p => p.url === savedProjectUrl);
+            if (match) {
+                projectSelect.value = savedProjectUrl;
+                if (useTempChatCheckbox.checked) {
+                    useTempChatCheckbox.checked = !1;
+                    saveTempChatSetting(!1);
+                }
+            }
+        }
+    } catch (e) {
+        projectSelect.innerHTML = '<option value="">加载项目失败</option>';
+        addLog("加载项目列表失败: " + e.message, "error");
+    }
 }
 
 initializeApp();

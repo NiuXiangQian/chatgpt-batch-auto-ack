@@ -54,6 +54,21 @@
           <span class="setting-hint" data-i18n="control.useTempChatHint">临时聊天不会保存历史记录</span>
         </div>
 
+        <!-- Project Chat Setting (mutually exclusive with temp chat) -->
+        <div class="setting-item">
+          <label class="setting-label" for="projectSelect">
+            <span class="setting-icon">📁</span>
+            <span class="setting-text">所属项目（与临时聊天二选一）</span>
+          </label>
+          <select
+            id="projectSelect"
+            class="setting-input"
+          >
+            <option value="">加载项目列表中...</option>
+          </select>
+          <span class="setting-hint">如需在某个项目下创建对话，请先取消勾选“使用临时聊天”，再在此选择项目。</span>
+        </div>
+
         <!-- More Settings Toggle -->
         <div class="more-settings-toggle">
           <button
