@@ -1025,7 +1025,7 @@ h2::before {
 }
 
 .questions-list {
-  max-height: 400px;
+  max-height: 320px;
   overflow-y: auto;
 }
 
@@ -1033,7 +1033,7 @@ h2::before {
   background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
   border: 2px solid #e5e7eb;
   border-radius: 12px;
-  padding: 16px;
+  padding: 10px 12px;
   margin-bottom: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1058,6 +1058,20 @@ h2::before {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.question-order {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .status-badge {
@@ -1127,6 +1141,33 @@ h2::before {
   margin-left: 12px;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.question-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.question-edit-btn,
+.question-remove-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.question-edit-btn:hover,
+.question-remove-btn:hover {
+  background: #e5e7eb;
+  color: #111827;
 }
 
 .question-details {
@@ -1201,6 +1242,42 @@ h2::before {
   background: #fee2e2;
   padding: 8px;
   border-radius: 4px;
+}
+
+.question-detail-content {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.question-edit-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+  background: #f9fafb;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+}
+
+.question-edit-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.16);
+  background: #ffffff;
+}
+
+.modal-footer-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn-small {
+  padding: 8px 14px;
+  font-size: 13px;
 }
 
 /* Scrollbar */

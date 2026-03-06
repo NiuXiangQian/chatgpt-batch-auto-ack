@@ -211,7 +211,14 @@ function handlePause() {
 }
 
 function handleResume() {
-    isPaused = !1, updateControlButtons(), addLog(t("messages.executionResumed"), "info"), processNextQuestion()
+    if (!isRunning) return;
+    // reset any possibly stuck "processing" question back to pending
+    const e = questions.find(t => "processing" === t.status);
+    e && (e.status = "pending", e.error || (e.error = "手动恢复时重置为待处理"), saveQuestions(), updateUI(), addLog("检测到上一个问题可能未结束，已重置为待处理。", "warning"));
+    isPaused = !1;
+    updateControlButtons();
+    addLog(t("messages.executionResumed"), "info");
+    processNextQuestion()
 }
 
 function handleStop() {
@@ -323,30 +330,75 @@ function updateStatistics() {
 function updateQuestionsList() {
     if (0 === questions.length) return void (questionsList.innerHTML = `\n      <div class="empty-state">\n        <p data-i18n="questions.noQuestions">${t("questions.noQuestions")}</p>\n        <p data-i18n="questions.addToStart">${t("questions.addToStart")}</p>\n      </div>\n    `);
     questionsList.innerHTML = "";
-    [...questions].reverse().forEach((e, t) => {
+    questions.forEach((e, t) => {
         const s = createQuestionItem(e, t);
+        s.draggable = !0;
+        s.addEventListener("dragstart", handleDragStart);
+        s.addEventListener("dragover", handleDragOver);
+        s.addEventListener("drop", handleDrop);
+        s.addEventListener("dragend", handleDragEnd);
         questionsList.appendChild(s)
     })
+}
+
+let draggedItem = null;
+
+function handleDragStart(e) {
+    draggedItem = e.currentTarget, e.dataTransfer && (e.dataTransfer.effectAllowed = "move"), draggedItem.classList.add("dragging")
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    const t = e.currentTarget;
+    if (!draggedItem || draggedItem === t) return;
+    const s = t.getBoundingClientRect(), n = e.clientY - s.top, o = n > s.height / 2;
+    questionsList.insertBefore(draggedItem, o ? t.nextSibling : t)
+}
+
+function handleDrop(e) {
+    e.preventDefault(), updateQuestionsOrderFromDOM()
+}
+
+function handleDragEnd() {
+    draggedItem && draggedItem.classList.remove("dragging"), draggedItem = null
+}
+
+function updateQuestionsOrderFromDOM() {
+    const e = Array.from(questionsList.querySelectorAll(".question-item")).map(e => e.dataset.id), t = [];
+    e.forEach(e => {
+        const s = questions.find(t => t.id === e);
+        s && t.push(s)
+    }), t.length === questions.length && (questions = t, saveQuestions(), updateUI())
 }
 
 function createQuestionItem(e, s) {
     const n = document.createElement("div");
     n.className = "question-item", n.dataset.id = e.id;
     const o = e.status, a = t("questions.status." + e.status);
-    let i = "";
-    if ("completed" === e.status) {
-        let s = "";
-        e.sources && e.sources.length > 0 && (s = `\n        <div class="detail-section">\n          <h4>${t("questions.sources")} (${e.sources.length})</h4>\n          <ul class="sources-list">\n            ${e.sources.map(e => `\n              <li class="source-item">\n                <div class="source-title">${escapeHtml(e.title)}</div>\n                <a href="${escapeHtml(e.url)}" target="_blank" class="source-url">${escapeHtml(e.url)}</a>\n                ${e.snippet ? `<div class="source-snippet">${escapeHtml(e.snippet)}</div>` : ""}\n              </li>\n            `).join("")}\n          </ul>\n        </div>\n      `), i = `\n      <div class="question-details">\n        <div class="detail-section">\n          <h4>${t("questions.question")}</h4>\n          <div class="answer-text">${escapeHtml(e.question)}</div>\n        </div>\n        <div class="detail-section">\n          <h4>${t("questions.answer")}</h4>\n          <div class="answer-text">${escapeHtml(e.answer || t("questions.noAnswer"))}</div>\n        </div>\n        ${s}\n      </div>\n    `
-    } else "failed" === e.status && (i = `\n      <div class="question-details">\n        <div class="detail-section">\n          <h4>${t("questions.question")}</h4>\n          <div class="answer-text">${escapeHtml(e.question)}</div>\n        </div>\n        <div class="detail-section">\n          <h4>${t("questions.errorInfo")}</h4>\n          <div class="error-text">${escapeHtml(e.error || t("questions.unknownError"))}</div>\n        </div>\n      </div>\n    `);
     const r = e.completedAt ? new Date(e.completedAt).toLocaleString("zh-CN", {
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
         minute: "2-digit"
     }) : "";
-    return n.innerHTML = `\n    <div class="question-header">\n      <span class="status-badge ${o}">${a}</span>\n      <div class="question-text" title="${escapeHtml(e.question)}">\n        ${escapeHtml(e.question)}\n      </div>\n      ${r ? `<span class="question-time">${r}</span>` : ""}\n    </div>\n    ${i}\n  `, n.addEventListener("click", () => {
-        n.classList.toggle("expanded")
-    }), n
+    return n.innerHTML = `\n    <div class="question-header">\n      <span class="question-order">${s + 1}</span>\n      <span class="status-badge ${o}">${a}</span>\n      <div class="question-text" title="${escapeHtml(e.question)}">\n        ${escapeHtml(e.question)}\n      </div>\n      ${r ? `<span class="question-time">${r}</span>` : ""}\n      <div class="question-actions">\n        <button type="button" class="question-edit-btn" title="编辑问题">✏️</button>\n        <button type="button" class="question-remove-btn" title="从队列中移除">✕</button>\n      </div>\n    </div>\n  `, function () {
+        const i = n.querySelector(".question-header"), r = n.querySelector(".question-edit-btn"),
+            l = n.querySelector(".question-remove-btn");
+        i && i.addEventListener("click", t => {
+            t.target && (t.target.classList.contains("question-edit-btn") || t.target.classList.contains("question-remove-btn")) || showQuestionDetailModal(e)
+        }), r && r.addEventListener("click", s => {
+            s.stopPropagation();
+            if (!questionEditModal || !questionEditTextarea) return;
+            currentEditingQuestion = e;
+            questionEditTextarea.value = e.question || "";
+            questionEditModal.style.display = "flex";
+            questionEditTextarea.focus()
+        }), l && l.addEventListener("click", s => {
+            s.stopPropagation();
+            if (!confirm("确定从队列中移除这条问题吗？")) return;
+            questions = questions.filter(t => t.id !== e.id), saveQuestions(), updateUI()
+        })
+    }(), n
 }
 
 function updateControlButtons() {
@@ -485,8 +537,62 @@ chrome.storage.onChanged.addListener((e, t) => {
     chrome.runtime.onMessage.addListener(arguments[0])
 };
 
+let questionDetailModal = null, questionDetailContent = null, questionDetailModalClose = null;
+let questionEditModal = null, questionEditTextarea = null, questionEditSave = null, questionEditCancel = null,
+    questionEditModalClose = null, currentEditingQuestion = null;
+
+function initQuestionDetailModal() {
+    questionDetailModal = document.getElementById("questionDetailModal");
+    questionDetailContent = document.getElementById("questionDetailContent");
+    questionDetailModalClose = document.getElementById("questionDetailModalClose");
+    if (questionDetailModal && questionDetailContent && questionDetailModalClose) {
+        questionDetailModalClose.addEventListener("click", () => {
+            questionDetailModal.style.display = "none"
+        });
+        questionDetailModal.addEventListener("click", e => {
+            e.target === questionDetailModal && (questionDetailModal.style.display = "none")
+        })
+    }
+    questionEditModal = document.getElementById("questionEditModal");
+    questionEditTextarea = document.getElementById("questionEditTextarea");
+    questionEditSave = document.getElementById("questionEditSave");
+    questionEditCancel = document.getElementById("questionEditCancel");
+    questionEditModalClose = document.getElementById("questionEditModalClose");
+    if (questionEditModal && questionEditTextarea && questionEditSave && questionEditCancel && questionEditModalClose) {
+        const closeEditModal = () => {
+            questionEditModal.style.display = "none";
+            currentEditingQuestion = null
+        };
+        questionEditModalClose.addEventListener("click", closeEditModal);
+        questionEditCancel.addEventListener("click", closeEditModal);
+        questionEditModal.addEventListener("click", e => {
+            e.target === questionEditModal && closeEditModal()
+        });
+        questionEditSave.addEventListener("click", () => {
+            if (!currentEditingQuestion) return;
+            const e = questionEditTextarea.value.trim();
+            if (!e) return;
+            currentEditingQuestion.question = e;
+            saveQuestions();
+            updateUI();
+            closeEditModal()
+        })
+    }
+}
+
+function showQuestionDetailModal(e) {
+    if (!questionDetailModal || !questionDetailContent) return;
+    let s = "";
+    if ("completed" === e.status) {
+        let n = "";
+        e.sources && e.sources.length > 0 && (n = `\n      <div class="detail-section">\n        <h4>${t("questions.sources")} (${e.sources.length})</h4>\n        <ul class="sources-list">\n          ${e.sources.map(e => `\n            <li class="source-item">\n              <div class="source-title">${escapeHtml(e.title)}</div>\n              <a href="${escapeHtml(e.url)}" target="_blank" class="source-url">${escapeHtml(e.url)}</a>\n              ${e.snippet ? `<div class="source-snippet">${escapeHtml(e.snippet)}</div>` : ""}\n            </li>\n          `).join("")}\n        </ul>\n      </div>\n    `), s = `\n    <div class="detail-section">\n      <h4>${t("questions.question")}</h4>\n      <div class="answer-text">${escapeHtml(e.question)}</div>\n    </div>\n    <div class="detail-section">\n      <h4>${t("questions.answer")}</h4>\n      <div class="answer-text">${escapeHtml(e.answer || t("questions.noAnswer"))}</div>\n    </div>\n    ${n}\n  `
+    } else "failed" === e.status ? s = `\n    <div class="detail-section">\n      <h4>${t("questions.question")}</h4>\n      <div class="answer-text">${escapeHtml(e.question)}</div>\n    </div>\n    <div class="detail-section">\n      <h4>${t("questions.errorInfo")}</h4>\n      <div class="error-text">${escapeHtml(e.error || t("questions.unknownError"))}</div>\n    </div>\n  ` : s = `\n    <div class="detail-section">\n      <h4>${t("questions.question")}</h4>\n      <div class="answer-text">${escapeHtml(e.question)}</div>\n    </div>\n  `;
+    questionDetailContent.innerHTML = s;
+    questionDetailModal.style.display = "flex"
+}
+
 async function initializeApp() {
-    await loadTempChatSetting(), await loadSystemCommandSetting(), addLog(t("messages.ready"), "success")
+    await loadTempChatSetting(), await loadSystemCommandSetting(), initQuestionDetailModal(), addLog(t("messages.ready"), "success")
 }
 
 initializeApp();

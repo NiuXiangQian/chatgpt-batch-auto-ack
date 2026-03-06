@@ -236,11 +236,6 @@
       </div>
     </section>
 
-    <section class="log-section">
-      <h2 data-i18n="log.title">Execution Log</h2>
-      <div id="logContainer" class="log-container"></div>
-    </section>
-
     <section class="questions-section">
       <h2 data-i18n="questions.title">Question List</h2>
       <div class="action-bar">
@@ -248,6 +243,11 @@
         <button id="clearAllBtn" class="btn btn-danger" data-i18n="questions.clearBtn">Clear All</button>
       </div>
       <div id="questionsList" class="questions-list"></div>
+    </section>
+
+    <section class="log-section">
+      <h2 data-i18n="log.title">Execution Log</h2>
+      <div id="logContainer" class="log-container"></div>
     </section>
   </div>
 
@@ -283,6 +283,41 @@
           <div class="modal-note-text">
             仅当地址以 <code>http://</code> 或 <code>https://</code> 开头时才会发送；网络异常不会影响插件继续执行。
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Detail Modal -->
+  <div id="questionDetailModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="questionDetailModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div id="questionDetailModalTitle" class="modal-title">问题详情</div>
+        <button id="questionDetailModalClose" class="modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="questionDetailContent" class="question-detail-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Edit Modal -->
+  <div id="questionEditModal" class="modal-overlay" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="questionEditModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div id="questionEditModalTitle" class="modal-title">编辑问题</div>
+        <button id="questionEditModalClose" class="modal-close" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <textarea
+          id="questionEditTextarea"
+          class="question-edit-textarea"
+          rows="6"
+          placeholder="在这里编辑问题内容..."
+        ></textarea>
+        <div class="modal-footer-buttons">
+          <button id="questionEditCancel" class="btn btn-secondary btn-small" type="button">取消</button>
+          <button id="questionEditSave" class="btn btn-primary btn-small" type="button">保存</button>
         </div>
       </div>
     </div>
