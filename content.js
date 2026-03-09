@@ -185,11 +185,52 @@ function sendResultToExternalApi(result) {
                 error: result.error
             };
             try {
+                // 记录调用结果回调地址的日志
+                try {
+                    chrome.runtime.sendMessage({
+                        type: "LOG_MESSAGE",
+                        message: `检测到结果回调地址：${url}，即将发送本次回答结果。`,
+                        level: "info"
+                    }, () => {
+                        if (chrome.runtime && chrome.runtime.lastError) {
+                        }
+                    });
+                } catch (e) {
+                }
                 fetch(url, {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(payload)
-                }).catch(() => {});
+                }).then(resp => {
+                    try {
+                        const status = typeof resp.status === "number" ? resp.status : 0;
+                        const ok = status >= 200 && status < 300;
+                        const msg = ok
+                            ? `已向结果回调地址发送成功（状态码：${status}）。`
+                            : `向结果回调地址发送失败（状态码：${status}）。`;
+                        chrome.runtime.sendMessage({
+                            type: "LOG_MESSAGE",
+                            message: msg,
+                            level: ok ? "success" : "error"
+                        }, () => {
+                            if (chrome.runtime && chrome.runtime.lastError) {
+                            }
+                        });
+                    } catch (e) {
+                    }
+                }).catch(err => {
+                    try {
+                        chrome.runtime.sendMessage({
+                            type: "LOG_MESSAGE",
+                            message: `向结果回调地址发送失败：${err && err.message ? err.message : String(err)}`,
+                            level: "error"
+                        }, () => {
+                            if (chrome.runtime && chrome.runtime.lastError) {
+                            }
+                        });
+                    } catch (e) {
+                    }
+                });
             } catch {
                 // ignore fetch errors
             }
