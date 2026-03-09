@@ -25,26 +25,109 @@ async function handleStreamEnd() {
 }
 
 async function parseSSEWithBackend() {
-    if (currentQuestion) try {
-        const e = await chrome.storage.local.get(["authToken"]);
-        if (!e.authToken) throw new Error("Not authenticated. Please login first.");
-        const t = CONFIG.DEFAULT_SERVER_URL, n = await fetch(`${t}/api/sse/parse`, {
-            method: "POST",
-            headers: {"Content-Type": "application/json", Authorization: `Bearer ${e.authToken}`},
-            body: JSON.stringify({question: currentQuestion.question, sse_chunks: sseChunks})
-        });
-        if (!n.ok) {
-            if (401 === n.status) throw new Error("Authentication expired. Please login again.");
-            const e = await n.json();
-            throw new Error(e.detail || "Backend API error")
-        }
-        const r = await n.json();
-        currentAnswer = r.answer.answer || "", currentSources = r.answer.sources || [], currentReferences = r.answer.references || [], handleAnswerComplete()
+    if (!currentQuestion) return;
+    try {
+        const { answer, sources, references } = parseSSELocally(sseChunks);
+        currentAnswer = answer || "";
+        currentSources = sources || [];
+        currentReferences = references || [];
+        handleAnswerComplete();
     } catch (e) {
-        sendQuestionResult(!1, `Backend parsing error: ${e.message}`)
+        sendQuestionResult(false, `SSE parse error: ${e.message}`);
     } finally {
-        isParsing = !1
+        isParsing = false;
     }
+}
+
+/**
+ * Parse SSE chunks locally (no backend). Extracts assistant text from delta events.
+ * SSE format: event: delta / data: {"p":"","o":"add","v":{...}} or data: {"v":[{"p":"/message/content/parts/0","o":"append","v":"..."}]}
+ * For thinking mode: only collects from channel "final", skips channel "commentary" (thinking preview).
+ */
+function parseSSELocally(chunks) {
+    let answer = "";
+    const sources = [];
+    const references = [];
+
+    if (!Array.isArray(chunks) || chunks.length === 0) {
+        return { answer, sources, references };
+    }
+
+    // In thinking mode: "commentary" = thinking preview (skip), "final" = actual answer (collect)
+    // When null/undefined = non-thinking mode, collect all
+    let currentChannel = null;
+
+    for (const chunk of chunks) {
+        if (!chunk || typeof chunk !== "object") continue;
+
+        // Skip non-delta payloads (and delta_encoding string payload)
+        if (typeof chunk.type === "string" && ["resume_conversation_token", "message_marker", "server_ste_metadata", "message_stream_complete", "conversation_detail_metadata", "url_moderation"].includes(chunk.type)) {
+            continue;
+        }
+
+        // Full message add: update currentChannel for thinking mode
+        if (chunk.v && chunk.v.message && typeof chunk.v.message === "object") {
+            const msg = chunk.v.message;
+            const ch = msg.channel;
+            if (ch === "commentary" || ch === "final") {
+                currentChannel = ch;
+            } else if (ch === null || ch === undefined) {
+                currentChannel = null; // non-thinking, collect all
+            }
+            const content = msg.content;
+            if (content && content.parts && Array.isArray(content.parts)) {
+                const textPart = content.parts.find(p => typeof p === "string");
+                if (typeof textPart === "string" && textPart.length > 0) {
+                    if (currentChannel !== "commentary") {
+                        answer += textPart;
+                    }
+                }
+            }
+            if (msg.metadata && Array.isArray(msg.metadata.citations)) {
+                sources.push(...msg.metadata.citations);
+            }
+            if (msg.metadata && Array.isArray(msg.metadata.content_references)) {
+                references.push(...msg.metadata.content_references);
+            }
+            continue;
+        }
+
+        // Delta with patch list: { "o": "patch", "v": [ { "p", "o", "v" }, ... ] } or { "v": [ ... ] }
+        const patchList = chunk.v;
+        if (Array.isArray(patchList)) {
+            for (const op of patchList) {
+                if (op && op.p === "/message/content/parts/0" && op.o === "append" && typeof op.v === "string") {
+                    if (currentChannel !== "commentary") {
+                        answer += op.v;
+                    }
+                }
+            }
+            continue;
+        }
+
+        // Single patch: { "p": "/message/content/parts/0", "o": "append", "v": "..." }
+        if (chunk.p === "/message/content/parts/0" && chunk.o === "append" && typeof chunk.v === "string") {
+            if (currentChannel !== "commentary") {
+                answer += chunk.v;
+            }
+        }
+    }
+
+    // Some models返回JSON对象：{ question: "...", status: "...", answer: "...", ... }
+    // 这种情况下，只保留其中的 answer 字段内容。
+    let finalAnswer = answer.trim();
+    if (finalAnswer.startsWith("{") && finalAnswer.endsWith("}")) {
+        try {
+            const parsed = JSON.parse(finalAnswer);
+            if (parsed && typeof parsed.answer === "string") {
+                finalAnswer = parsed.answer.trim();
+            }
+        } catch {
+            // 如果不是合法 JSON，则按普通文本返回
+        }
+    }
+
+    return { answer: finalAnswer, sources, references };
 }
 
 function handleSSEError(e) {
@@ -293,6 +376,7 @@ async function inputQuestion(e) {
         } else t.value = e, t.dispatchEvent(new Event("input", {bubbles: !0})), t.dispatchEvent(new Event("change", {bubbles: !0}));
         return await sleep(500), !0
     } catch (e) {
+        console.error("Error inputting question:", e)
         return !1
     }
 }
@@ -395,12 +479,19 @@ window.addEventListener("message", e => {
         })), !0
     }
     if ("GET_PROJECTS" === e.type) {
-        try {
-            const projects = getChatGPTProjects();
-            n({success: !0, projects});
-        } catch (r) {
-            n({success: !1, error: r.message || String(r)});
-        }
+        (async () => {
+            try {
+                try {
+                    await waitForElement('a.__menu-item[data-sidebar-item="true"][href*="/project"]', 1e4);
+                } catch (o) {
+                    // ignore timeout and still try to read whatever is available
+                }
+                const projects = getChatGPTProjects();
+                n({success: !0, projects});
+            } catch (r) {
+                n({success: !1, error: r.message || String(r)});
+            }
+        })();
         return !0;
     }
 }), initializeContentScript();

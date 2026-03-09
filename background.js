@@ -48,11 +48,10 @@ async function handleGetProjects(e, t, a) {
         if (tabs.length > 0) {
             tab = tabs[0];
             await chrome.tabs.update(tab.id, {url: targetUrl, active: !1});
-            await sleep(2e3);
         } else {
             tab = await chrome.tabs.create({url: targetUrl, active: !1});
-            await waitForTabLoad(tab.id);
         }
+        await waitForTabLoad(tab.id);
         const ready = await waitForContentScript(tab.id);
         if (!ready) throw new Error("Content script not ready on ChatGPT page.");
         const resp = await chrome.tabs.sendMessage(tab.id, {type: "GET_PROJECTS"});
